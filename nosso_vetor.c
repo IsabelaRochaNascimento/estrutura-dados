@@ -15,12 +15,12 @@ typedef struct{  //definir as diretrizws
 void inicia_vetor (t_vetor *, int); //recebe como parametro o tipo vetor e a capacidade
 int esta_cheio (t_vetor *);
 int esta_vazio (t_vetor *);
-int insere (int, t_vetor *);
+int insere (t_vetor *, int);
 void exibe_vetor (t_vetor *, char *);
 int remove_elemento (t_vetor *, int *); //o retorno é sucesso ou fracasso, o elemneto qeu sai, vem pro parametro referencia
 
 //funcao pricipal
-int man (){
+int main (){
     // tem dois atributos : ocupacao e v
     t_vetor  vetor; //minha variavel vetor, e do tipo vetor
     printf("digite a capacidade do vetor: ");
@@ -28,16 +28,17 @@ int man (){
     printf("endereco da estrutura: %p\n", &vetor);
     scanf("%d", &capacidade);
     inicia_vetor (&vetor, capacidade); // &:referencia 
-    if (insere(10, &vetor)) { //se for verdadeiro
+    if (insere(&vetor, 10)) { //se for verdadeiro
         printf("10 inserido com sucesso!\n");
     }else{
         printf("Nao foi possivel realizar a insercao\n");
     }
-    insere (20,&vetor);
-    exibe_vetor (&vetor);
+    insere (&vetor, 20);
+    exibe_vetor (&vetor, "meu vetor");
     t_vetor outro;
-    exibe_veetor (&outro, "outro vetor");
-     inicia (&outro, 5);
+    inicia_vetor (&outro, 5);
+    exibe_vetor (&outro, "outro vetor");
+    
     return 0;
 }
 
@@ -54,21 +55,21 @@ int esta_cheio (t_vetor *p_vetor){
     else
         return 0;
 }
-int esta_vazio (t_vetor, *p_vetor){
+int esta_vazio (t_vetor *p_vetor){
     //if(p_vetor -> ocupacao == 0)
       //return 1;
-       // return 0;
-    return p_vetor-> ocupacao == 0;
+        //return 0;
+    return p_vetor -> ocupacao == 0;
 }
 
 
-int insere (int, t_vetor *p_vetor){
+int insere (t_vetor *p_vetor, int valor){
     if (esta_cheio(p_vetor)){
-        return FRACASSO
+        return FRACASSO;
     } else{
-        p_vetor -> v[p_vetor-> ocupacao] = i;
+        p_vetor -> v[p_vetor-> ocupacao] = valor;
         p_vetor -> ocupacao++;
-        return SUCESSO
+        return SUCESSO;
     }
 }
 void exibe_vetor (t_vetor *p_vetor, char * msg){
