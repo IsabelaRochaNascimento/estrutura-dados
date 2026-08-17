@@ -7,7 +7,7 @@
 //anotacao: casting -> muda o tipo
 typedef struct{  //definir as diretrizws 
     int *v; //refeencia de vetor (v -> ponteiro de estrutura)
-    int ocupacao; //(ocupacao -> inteiro)
+    int ocupacao; //(ocupacao(diz quantos elementos tem) -> inteiro)
     int capacidade;
 } t_vetor; //tipo vetor 
 
@@ -15,12 +15,12 @@ typedef struct{  //definir as diretrizws
 void inicia_vetor (t_vetor *, int); //recebe como parametro o tipo vetor e a capacidade
 int esta_cheio (t_vetor *);
 int esta_vazio (t_vetor *);
-int insere (t_vetor *, int);
+void insere (int, t_vetor *);
 void exibe_vetor (t_vetor *, char *);
 int remove_elemento (t_vetor *, int *); //o retorno é sucesso ou fracasso, o elemneto qeu sai, vem pro parametro referencia
 
 //funcao pricipal
-int main (){
+int man (){
     // tem dois atributos : ocupacao e v
     t_vetor  vetor; //minha variavel vetor, e do tipo vetor
     printf("digite a capacidade do vetor: ");
@@ -28,18 +28,29 @@ int main (){
     printf("endereco da estrutura: %p\n", &vetor);
     scanf("%d", &capacidade);
     inicia_vetor (&vetor, capacidade); // &:referencia 
-    if (insere(&vetor, 10)) { //se for verdadeiro
-        printf("10 inserido com sucesso!\n");
-    }else{
-        printf("Nao foi possivel realizar a insercao\n");
+    //if (insere(10, &vetor)) { //se for verdadeiro
+      //  printf("10 inserido com sucesso!\n");
+    //}else{
+       // printf("Nao foi possivel realizar a insercao\n");
+    //}
+    //insere (20,&vetor);
+    //exibe_vetor (&vetor);
+    //t_vetor outro;
+    //exibe_veetor (&outro, "outro vetor");
+    // inicia (&outro, 5);
+    for(int i= 1; i <= 100; i++){
+        insere (i,&vetor);
+        exibe_vetor(&vetor, "");
     }
-    insere (&vetor, 20);
-    exibe_vetor (&vetor, "meu vetor");
-    t_vetor outro;
-    inicia_vetor (&outro, 5);
-    exibe_vetor (&outro, "outro vetor");
-    
+    int elemento_removido;
+    if(remove_elemento (&vetor, &elemento_removido)){
+        printf("%d foi removido", elemento_removido);
+        exibe_vetor (&vetor, "");
+    } else{
+        printf("vetor vazio, nao ha o que remover\n");
+    }
     return 0;
+
 }
 
 //funcao auxiliares
@@ -50,28 +61,44 @@ void inicia_vetor (t_vetor *p_vetor, int capacidade) { //p_vetor -> ponteiro tip
     p_vetor -> capacidade = capacidade;
 }
 int esta_cheio (t_vetor *p_vetor){
-    if (p_vetor -> capacidade == p_vetor -> ocupacao)
-        return 1;
-    else
-        return 0;
+    //if (p_vetor -> capacidade == p_vetor -> ocupacao)
+      //  return 1;
+    //else
+      //  return 0;
+      return p_vetor -> capacidade ==p_vetor -> ocupacao;
 }
 int esta_vazio (t_vetor *p_vetor){
     //if(p_vetor -> ocupacao == 0)
       //return 1;
-        //return 0;
+       // return 0;
     return p_vetor -> ocupacao == 0;
 }
 
-
-int insere (t_vetor *p_vetor, int valor){
-    if (esta_cheio(p_vetor)){
-        return FRACASSO;
-    } else{
-        p_vetor -> v[p_vetor-> ocupacao] = valor;
-        p_vetor -> ocupacao++;
-        return SUCESSO;
+//int insere (int, t_vetor *p_vetor){
+    //if (esta_cheio(p_vetor)){
+      //  return FRACASSO
+    //} else{
+        //p_vetor -> v[p_vetor-> ocupacao] = i;
+      //  p_vetor -> ocupacao++;
+    //    return SUCESSO
+  //  }
+//}
+void dobra(t_vetor *p_vetor){ //quando a funçao nn é publica, ela nn é declarda la em cima (no .h)
+    int *temp = (int *) malloc (sizeof(int) * p_vetor-> capacidade * 2);// para ser 1:1 (um para um)
+    for (int i=0; i < p_vetor-> ocupacao; i++)//laço para copiar os valore que ja estavam para os novos espaços
+        temp[i] = p_vetor -> v[i]; //temp recebe posicao 0 do v, posicao 1 do v... e assim vai
+    free (p_vetor -> v); //para liberar (apagar oq o v aponta)
+    p_vetor -> v = temp; //atualizando o endereço, ja que apagamos o v
+    p_vetor -> capacidade = p_vetor-> capacidade * 2; //mudando a capacidade (se cabiam 4 agora cabe 8)
+}  
+void insere(int i, t_vetor *p_vetor){
+    if(esta_cheio(p_vetor)){
+        dobra(p_vetor);// se estiver cheio vai dobrar, se nn ingonra e preenche se n estiver ocupado
     }
+    p_vetor -> v[p_vetor-> ocupacao] = i;
+    p_vetor -> ocupacao++; 
 }
+
 void exibe_vetor (t_vetor *p_vetor, char * msg){
     printf("\n%s\n", msg);
     printf("ocupacao = %d\n", p_vetor-> ocupacao);
@@ -79,7 +106,15 @@ void exibe_vetor (t_vetor *p_vetor, char * msg){
     printf("o vetor: ");
     for(int i=0; i < p_vetor->ocupacao; i++)
         printf("%d ",p_vetor->v[1]);
-    for(int i=p_vetor->ocupacao; i< p_vetor->capacidade; i++)
-        printf("__ ");
+    //for(int i=p_vetor->ocupacao; i< p_vetor->capacidade; i++)
+    //   printf("__ ");
     printf("\n");
+}
+int remove_elemento (t_vetor *p_vetor, int * p_quem_sai) {
+    if(esta_vazio(p_vetor)) return FRACASSO;
+    p_vetor ->ocupacao--; //BAIXAR a ocupacao
+    //um operador de referencia * (conceito = ao contrario &)
+    *p_quem_sai = p_vetor -> v[p_vetor -> ocupacao]; //voltou para a ocupacao, voltou uma casa 
+    
+    return SUCESSO;
 }
