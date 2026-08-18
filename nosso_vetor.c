@@ -20,7 +20,7 @@ void insere (int, t_vetor *);
 void exibe_vetor (t_vetor *, char *);
 int remove_elemento (t_vetor *, int *); //o retorno é sucesso ou fracasso, o elemneto qeu sai, vem pro parametro referencia
 void limpa_vetor (t_vetor *); 
-int busque_elemento (t_vetor *, int *);
+int busque_elemento(t_vetor *p_vetor, int elemento);
 
 //funcao pricipal
 int main (){
@@ -111,8 +111,8 @@ int esta_vazio (t_vetor *p_vetor){
 //}
 
 //JUNÇAO DO DOBRA E REDUZ_A_CAPACIDADE
-void redimensiona (int t_vetor *p_vetor, int novaCapacidade){
-    int * temp = (int *) malloc (sizeoff (int) *novaCapacaide);
+void redimensiona (t_vetor *p_vetor , int novaCapacidade){
+    int *temp = (int *) malloc (sizeof(int) *novaCapacidade);
     for(int i =0; i <p_vetor -> ocupacao ; i++){
         temp[i] = p_vetor -> v[i];
     free (p_vetor -> v);
@@ -146,7 +146,7 @@ int remove_elemento (t_vetor *p_vetor, int * p_quem_sai) {
     p_vetor ->ocupacao--; //BAIXAR a ocupacao
     //um operador de referencia * (conceito = ao contrario &)
     *p_quem_sai = p_vetor -> v[p_vetor -> ocupacao]; //voltou para a ocupacao, voltou uma casa 
-    if (p_vetor -> capacidade >= CAPACIDADE_MINIMA* 2 && ) //capacidade_minima * 2, pq tem que garanetir wue vai ate 20
+    if (p_vetor -> capacidade >= CAPACIDADE_MINIMA* 2) //capacidade_minima * 2, pq tem que garanetir wue vai ate 20
     if (p_vetor -> ocupacao <= p_vetor -> capacidade / 4) //se a ocupaçcao for menor que 1/4
         redimensiona(p_vetor, p_vetor -> capacidade / 2); 
     return SUCESSO;
