@@ -1,12 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #define FRACASSO 0
 #define SUCESSO 1
 #define CAPACIDADE_MINIMA 10
 
 //anotacao: casting -> muda o tipo
-typedef struct{  //definir as diretrizws 
+typedef struct{  //definir as diretrizes
     int *v; //refeencia de vetor (v -> ponteiro de estrutura)
     int ocupacao; //(ocupacao(diz quantos elementos tem) -> inteiro)
     int capacidade;
@@ -22,15 +23,19 @@ int remove_elemento (t_vetor *, int *); //o retorno é sucesso ou fracasso, o el
 void limpa_vetor (t_vetor *); 
 int busque_elemento(t_vetor *p_vetor, int elemento);
 
+void gera_vetor (t_vetor *);
+void bubble (t_vetor *);
+void exibe_so_valores (t_vetor * ,char *);
+
 //funcao pricipal
-int main (){
+//int main (){
     // tem dois atributos : ocupacao e v
-    t_vetor  vetor; //minha variavel vetor, e do tipo vetor
-    printf("digite a capacidade do vetor: ");
-    int capacidade; //para armazenar o valor do usuario
-    printf("endereco da estrutura: %p\n", &vetor);
-    scanf("%d", &capacidade);
-    inicia_vetor (&vetor, capacidade); // &:referencia 
+   // t_vetor  vetor; //minha variavel vetor, e do tipo vetor
+    //printf("digite a capacidade do vetor: ");
+    //int capacidade; //para armazenar o valor do usuario
+    //printf("endereco da estrutura: %p\n", &vetor);
+    //scanf("%d", &capacidade);
+    //inicia_vetor (&vetor, capacidade); // &:referencia 
     //if (insere(10, &vetor)) { //se for verdadeiro
       //  printf("10 inserido com sucesso!\n");
     //}else{
@@ -41,32 +46,54 @@ int main (){
     //t_vetor outro;
     //exibe_veetor (&outro, "outro vetor");
     // inicia (&outro, 5);
-    for(int i= 1; i <= 100; i++){
-        insere (i,&vetor);
-        exibe_vetor(&vetor, "");
-    }
-    int elemento_removido;
-    if(remove_elemento (&vetor, &elemento_removido)){
-        printf("%d foi removido", elemento_removido);
-        exibe_vetor (&vetor, "");
-    } else{
-        printf("vetor vazio, nao ha o que remover\n");
-    }
+    //for(int i= 1; i <= 100; i++){
+      //  insere (i,&vetor);
+        //exibe_vetor(&vetor, "");
+    //}
+    //int elemento_removido;
+    //if(remove_elemento (&vetor, &elemento_removido)){
+      //  printf("%d foi removido", elemento_removido);
+        //exibe_vetor (&vetor, "");
+    //} else{
+      //  printf("vetor vazio, nao ha o que remover\n");
+    //}
     //while (!esta_vazio(&vetor)){
         //remove_elemento (&vetor, &elemento_removido);
        // printf("%d foi removido", elemento_removido);
      //   exibe_vetor (&vetor, "");
     //} 
-    limpa_vetor (&vetor);
-    exibe_vetor (&vetor, "vetor depois do limpa_vetor");
-    return 0;
+   // limpa_vetor (&vetor);
+    //exibe_vetor (&vetor, "vetor depois do limpa_vetor");
+  //  return 0;
 
+//}
+int main(){
+    t_vetor vetor;
+    int capacidade;
+    do{
+        printf("\ndigite a capacidade do vetor, 0 encerra: ");
+        scanf("%d", &capacidade);
+        if(capacidade > 0){
+            inicia_vetor (&vetor, capacidade);
+            gera_vetor (&vetor);
+            printf("ordenando...");
+            //exibe_so_valores (&vetor, "vetor original");
+            unsigned int inicio = time(0);
+            bubble (&vetor);
+            unsigned int fim = time(0);
+            printf("tamanho: %d, tempo %u s\n", capacidade, fim - inicio);
+           // exibe_so_valores (&vetor, "vetor ordenado pelo bubble:");
+        }
+    }while (capacidade > 0);
+    return 0;
 }
 
 //funcao auxiliares
 void inicia_vetor (t_vetor *p_vetor, int capacidade) { //p_vetor -> ponteiro tipo vetor
+    if(p_vetor -> v != NULL) //verifica se o ponteiro v esta ocupado, se estiver libera antes
+        free(p_vetor -> v); //liberaa memoria
     p_vetor -> v = (int *) malloc (capacidade * sizeof(int)); //queremos que seja um ponteiro de inteiros, saltando de 4 em 4
-    printf("endereco do vetor dentro da estrutura: %p\n", p_vetor -> v);
+    //printf("endereco do vetor dentro da estrutura: %p\n", p_vetor -> v);
     p_vetor -> ocupacao = 0;
     p_vetor -> capacidade = capacidade;
 }
@@ -160,4 +187,30 @@ int busque_elemento (t_vetor *p_vetor, int elemento){
             return 1;
     }
         return 0; 
+} 
+void gera_vetor (t_vetor *p_vetor){
+    srand(time(0));
+    for(int i = 0; i < p_vetor-> capacidade; i++){
+         p_vetor -> v[i] = rand() % (p_vetor ->capacidade * 10); ///sempre resto da capacidade x 10
+    } 
+      p_vetor -> ocupacao = p_vetor -> capacidade;
+}
+//estrura de uma bubble sort 
+void bubble (t_vetor *p_vetor){
+    for(int i = 1; i < p_vetor->capacidade; i++){
+        for(int j = 0; j < p_vetor -> capacidade - i; j++){
+            if(p_vetor -> v[j] > p_vetor -> v[j + 1]){
+                int aux = p_vetor -> v[j];
+                p_vetor -> v[j] = p_vetor -> v[j + 1];
+                p_vetor -> v[j + 1] = aux;
+            }
+        }
+    }
+}
+void exibe_so_valores (t_vetor *p_vetor ,char *msg){
+    printf("\n%f\n", msg);
+    for(int i = 0; i < p_vetor -> ocupacao; i++){
+        printf("%d", p_vetor -> v[i]);
+    }  
+    printf("\n");
 }
