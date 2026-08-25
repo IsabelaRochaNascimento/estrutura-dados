@@ -10,7 +10,7 @@
 typedef struct{  //definir as diretrizes
     int *v; //refeencia de vetor (v -> ponteiro de estrutura)
     int ocupacao; //(ocupacao(diz quantos elementos tem) -> inteiro)
-    int capacidade;
+    int capacidade; //quantos elementos CABEM no momento
 } t_vetor; //tipo vetor 
 
 //void : nn tem retorno, ela inicia 
@@ -78,10 +78,10 @@ int main(){
             gera_vetor (&vetor);
             printf("ordenando...");
             //exibe_so_valores (&vetor, "vetor original");
-            unsigned int inicio = time(0);
+            unsigned int inicio = time(0); //medir o tempo de inicio
             bubble (&vetor);
-            unsigned int fim = time(0);
-            printf("tamanho: %d, tempo %u s\n", capacidade, fim - inicio);
+            unsigned int fim = time(0); //medir o tempo do fim 
+            printf("tamanho: %d, tempo %u s\n", capacidade, fim - inicio); //subtari s valo9res
            // exibe_so_valores (&vetor, "vetor ordenado pelo bubble:");
         }
     }while (capacidade > 0);
@@ -97,6 +97,7 @@ void inicia_vetor (t_vetor *p_vetor, int capacidade) { //p_vetor -> ponteiro tip
     p_vetor -> ocupacao = 0;
     p_vetor -> capacidade = capacidade;
 }
+//SAO SENSORES: CHEIO E VAZIO
 int esta_cheio (t_vetor *p_vetor){
     //if (p_vetor -> capacidade == p_vetor -> ocupacao)
       //  return 1;
@@ -142,10 +143,11 @@ void redimensiona (t_vetor *p_vetor , int novaCapacidade){
     int *temp = (int *) malloc (sizeof(int) *novaCapacidade);
     for(int i =0; i <p_vetor -> ocupacao ; i++){
         temp[i] = p_vetor -> v[i];
-    free (p_vetor -> v);
+
+    }
+    free (p_vetor -> v);    
     p_vetor -> v = temp;
     p_vetor -> capacidade = novaCapacidade;
-    }
 }
 
 void insere(int i, t_vetor *p_vetor){
@@ -163,7 +165,7 @@ void exibe_vetor (t_vetor *p_vetor, char * msg){
     printf("capacidade = %d\n", p_vetor-> capacidade);
     printf("o vetor: ");
     for(int i=0; i < p_vetor->ocupacao; i++)
-        printf("%d ",p_vetor->v[1]);
+        printf("%d ",p_vetor->v[i]);
     //for(int i=p_vetor->ocupacao; i< p_vetor->capacidade; i++)
     //   printf("__ ");
     printf("\n");
@@ -188,15 +190,16 @@ int busque_elemento (t_vetor *p_vetor, int elemento){
     }
         return 0; 
 } 
-void gera_vetor (t_vetor *p_vetor){
+void gera_vetor (t_vetor *p_vetor){ //preenche o vetor com numeros aleatorios 
     srand(time(0));
     for(int i = 0; i < p_vetor-> capacidade; i++){
          p_vetor -> v[i] = rand() % (p_vetor ->capacidade * 10); ///sempre resto da capacidade x 10
     } 
-      p_vetor -> ocupacao = p_vetor -> capacidade;
+      p_vetor -> ocupacao = p_vetor -> capacidade; //enche tudo
 }
 //estrura de uma bubble sort 
-void bubble (t_vetor *p_vetor){
+void bubble (t_vetor *p_vetor){ //dois laços aninhados comparando vizinhos 
+                                //e trocando se estiverem fora de ordem — O(n²).
     for(int i = 1; i < p_vetor->capacidade; i++){
         for(int j = 0; j < p_vetor -> capacidade - i; j++){
             if(p_vetor -> v[j] > p_vetor -> v[j + 1]){
@@ -208,7 +211,7 @@ void bubble (t_vetor *p_vetor){
     }
 }
 void exibe_so_valores (t_vetor *p_vetor ,char *msg){
-    printf("\n%f\n", msg);
+    printf("\n%s\n", msg);
     for(int i = 0; i < p_vetor -> ocupacao; i++){
         printf("%d", p_vetor -> v[i]);
     }  
