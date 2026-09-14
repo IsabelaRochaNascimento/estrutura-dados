@@ -22,3 +22,8 @@ int desempilha (t_pilha *, int *);//desempilha do tipo pilha (tem que fazer por 
 int tamanho (t_pilha *); //recebe a pilha por referencia
 int esta_vazia (t_pilha *);
 int esta_cheia (t_pilha *);
+void exibirDecimaPrabaixo(t_pilha *); //mostra a pilha de cima para baixo 
+int extrai_abaixo_do_topo(t_pilha *);
+int valor_topo(t_pilha *); //ELEMENTO que esta no topo da pilha 
+void amassa_topo(t_pilha *, int);
+void amassa_pilha (t_pilha *, int);
